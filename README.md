@@ -2,6 +2,26 @@
 <img width="400" src="docs/logo.png" alt="logo">
 </div>
 
+# Fixing and Run Nettu Build Problems
+
+- Install cargo: `sudo apt install cargo`
+- Create a postgres database instance using docker
+  - `cd scheduler`
+  - `docker compose -f integrations/docker-compose.yml up -d`
+- Change some database configurations and environment keys
+  - `cd scheduler`
+  - `export ACCOUNT_API_KEY="apikeytest"`
+  - `export DATABASE_URL="postgresql://postgres:postgres@localhost:8000/nettuscheduler"`
+  - `export PORT="3000"`
+  - Also, change the clients port for this same env var (it's manual for now):
+    - Javascript: `scheduler/clients/javascript/lib/index.ts` line 46.
+    - Rust: `scheduler/crates/infra/src/config.rs` line 36.
+- Comment or delete `scheduler/src/bin/migrate.ts`
+- Install sqlx: `cargo install sqlx-cli`
+- Change .bashrc path (see last command output) and use `source ~/.bashrc`
+- Run migrations: `sqlx migrate run --source crates/infra/migrations`
+- Run API: `cargo run`
+
 # Nettu scheduler
 
 [![MIT licensed](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
