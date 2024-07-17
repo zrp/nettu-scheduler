@@ -64,11 +64,21 @@ impl Application {
         let listener = TcpListener::bind(&address)?;
         let port = listener.local_addr().unwrap().port();
 
+        let staging_url = std::env::var("ADMIN_STAGING_URL").unwrap_or_else(|_| "".to_string());
+        let production_url = std::env::var("ADMIN_PRODUCTION_URL").unwrap_or_else(|_| "".to_string());
+
         let server = HttpServer::new(move || {
             let ctx = context.clone();
 
             App::new()
-                .wrap(Cors::permissive())
+                .wrap(
+                    Cors::default()
+                    .allowed_origin(&staging_url)
+                    .allowed_origin(&production_url)
+                    .allowed_methods(vec!["GET", "POST", "DELETE", "PUT"])
+                    .max_age(3600)
+                )
+                // .wrap(Cors::permissive())
                 .wrap(middleware::Compress::default())
                 .wrap(TracingLogger::default())
                 .app_data(Data::new(ctx))
