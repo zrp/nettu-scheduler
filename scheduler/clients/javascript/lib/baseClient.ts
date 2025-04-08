@@ -1,11 +1,13 @@
 import axios, { AxiosResponse } from "axios";
-import { config } from ".";
+import { ClientConfig } from ".";
 
 export abstract class NettuBaseClient {
   private readonly credentials: ICredentials;
+  private readonly config: ClientConfig;
 
-  constructor(credentials: ICredentials) {
+  constructor(credentials: ICredentials, config: ClientConfig) {
     this.credentials = credentials;
+    this.config = config;
   }
 
   private getAxiosConfig = () => ({
@@ -14,13 +16,16 @@ export abstract class NettuBaseClient {
   });
 
   protected async get<T>(path: string): Promise<APIResponse<T>> {
-    const res = await axios.get(config.baseUrl + path, this.getAxiosConfig());
+    const res = await axios.get(
+      this.config.baseUrl + path,
+      this.getAxiosConfig()
+    );
     return new APIResponse(res);
   }
 
   protected async delete<T>(path: string): Promise<APIResponse<T>> {
     const res = await axios.delete(
-      config.baseUrl + path,
+      this.config.baseUrl + path,
       this.getAxiosConfig()
     );
     return new APIResponse(res);
@@ -34,7 +39,7 @@ export abstract class NettuBaseClient {
     const res = await axios({
       method: "DELETE",
       data,
-      url: config.baseUrl + path,
+      url: this.config.baseUrl + path,
       headers,
       validateStatus,
     });
@@ -43,7 +48,7 @@ export abstract class NettuBaseClient {
 
   protected async post<T>(path: string, data: any): Promise<APIResponse<T>> {
     const res = await axios.post(
-      config.baseUrl + path,
+      this.config.baseUrl + path,
       data,
       this.getAxiosConfig()
     );
@@ -52,7 +57,7 @@ export abstract class NettuBaseClient {
 
   protected async put<T>(path: string, data: any): Promise<APIResponse<T>> {
     const res = await axios.put(
-      config.baseUrl + path,
+      this.config.baseUrl + path,
       data,
       this.getAxiosConfig()
     );

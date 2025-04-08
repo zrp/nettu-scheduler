@@ -10,7 +10,10 @@ import { NettuEventClient, NettuEventUserClient } from "./eventClient";
 import { NettuHealthClient } from "./healthClient";
 import { NettuScheduleUserClient, NettuScheduleClient } from "./scheduleClient";
 import { NettuServiceUserClient, NettuServiceClient } from "./serviceClient";
-import { NettuUserClient as _NettuUserClient, NettuUserUserClient } from "./userClient";
+import {
+  NettuUserClient as _NettuUserClient,
+  NettuUserUserClient,
+} from "./userClient";
 
 export * from "./domain";
 
@@ -38,41 +41,39 @@ export interface INettuClient {
   user: _NettuUserClient;
 }
 
-type ClientConfig = {
+export type ClientConfig = {
   baseUrl: string;
 };
 
-export const config: ClientConfig = {
-  baseUrl: "http://localhost:5000/api/v1",
-};
-
 export const NettuUserClient = (
+  config: ClientConfig,
   partialCreds?: PartialCredentials
 ): INettuUserClient => {
   const creds = createCreds(partialCreds);
 
   return Object.freeze({
-    calendar: new NettuCalendarUserClient(creds),
-    events: new NettuEventUserClient(creds),
-    service: new NettuServiceUserClient(creds),
-    schedule: new NettuScheduleUserClient(creds),
-    user: new NettuUserUserClient(creds)
+    calendar: new NettuCalendarUserClient(creds, config),
+    events: new NettuEventUserClient(creds, config),
+    service: new NettuServiceUserClient(creds, config),
+    schedule: new NettuScheduleUserClient(creds, config),
+    user: new NettuUserUserClient(creds, config),
   });
 };
 
 export const NettuClient = (
+  config: ClientConfig,
   partialCreds?: PartialCredentials
 ): INettuClient => {
   const creds = createCreds(partialCreds);
 
   return Object.freeze({
-    account: new NettuAccountClient(creds),
-    events: new NettuEventClient(creds),
-    calendar: new NettuCalendarClient(creds),
-    user: new _NettuUserClient(creds),
-    service: new NettuServiceClient(creds),
-    schedule: new NettuScheduleClient(creds),
-    health: new NettuHealthClient(creds),
+    account: new NettuAccountClient(creds, config),
+    events: new NettuEventClient(creds, config),
+    calendar: new NettuCalendarClient(creds, config),
+    user: new _NettuUserClient(creds, config),
+    service: new NettuServiceClient(creds, config),
+    schedule: new NettuScheduleClient(creds, config),
+    health: new NettuHealthClient(creds, config),
   });
 };
 
