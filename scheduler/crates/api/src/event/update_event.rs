@@ -194,6 +194,10 @@ impl UseCase for UpdateEventUseCase {
             e.busy = *busy;
         }
 
+        if let (Some(start_ts), Some(duration)) = (start_ts, duration) {
+            e.end_ts = *start_ts + *duration;
+        }
+
         let valid_recurrence = if let Some(rrule_opts) = recurrence.clone() {
             // ? should exdates be deleted when rrules are updated
             e.set_recurrence(rrule_opts, &calendar.settings, true)

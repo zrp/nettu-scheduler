@@ -73,9 +73,9 @@ impl Application {
             App::new()
                 .wrap(
                     Cors::default()
-                    .allowed_origin(&staging_url)
-                    .allowed_origin(&production_url)
-                    .allowed_methods(vec!["GET", "POST", "DELETE", "PUT"])
+                    .allow_any_origin()
+                    .allow_any_method()
+                    .allow_any_header()
                     .max_age(3600)
                 )
                 // .wrap(Cors::permissive())

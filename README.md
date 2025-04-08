@@ -13,6 +13,8 @@
   - `export ACCOUNT_API_KEY="apikeytest"`
   - `export DATABASE_URL="postgresql://postgres:postgres@localhost:8000/nettuscheduler"`
   - `export PORT="3000"`
+  - `export ADMIN_STAGING_URL="https://senior-concierge-admin-staging.up.railway.app"`
+  - `export ADMIN_PRODUCTION_URL="https://senior-concierge-admin-production.up.railway.app"`
   - Also, change the clients port for this same env var (it's manual for now):
     - Javascript: `scheduler/clients/javascript/lib/index.ts` line 46.
     - Rust: `scheduler/crates/infra/src/config.rs` line 36.
